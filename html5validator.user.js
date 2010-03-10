@@ -9,44 +9,23 @@
 // Version: 0.0.1
 
 var validator_url = 'http://html5.validator.nu/';
-var boundary = (function() {
-    var n = 50;
-    var c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    c = c.split('');
-    var s = '';
-    for (var i = 0; i < n; i++) {
-        s += a[Math.floor(Math.random() * a.length)];
-    }
-    return s;
-})();
-
-var get_post_data = function(html) {
-    var line_break = "\r\n";
-    var get_content = function(key, val) {
-        return [
-            'Content-Disposition: form-data; name="' + key + '"',
-            '',
-            val
-        ].join(line_break);
-    };
-    var data = [
-        '--' + boundary,
-        get_content('out', 'json'),
-        '--' + boundary,
-        get_content('content', html),
-        '--' + boundary + '--'
-    ].join(line_break);
-};
-
 var execute_validate = function() {
     GM_xmlhttpRequest({
         method: 'GET',
         url:    location.href,
         onload: function(res) {
+            var boundary = get_boundary();
+            console.log(get_post_data(boundary, {
+                    out: 'json',
+                    content: res.responseText,
+                }));
             GM_xmlhttpRequest({
                 method: 'POST',
                 url: validator_url,
-                data: get_post_data(res.responseText),
+                data: get_post_data(boundary, {
+                    out: 'json',
+                    content: res.responseText,
+                }),
                 headers: {
                     'Content-type': 'multipart/form-data; boundary=' + boundary,
                 },
@@ -63,6 +42,37 @@ var execute_validate = function() {
             });
         },
     });
+};
+
+// get random boundary string
+var get_boundary = function() {
+    var n = 50;
+    var c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var s = '';
+    c = c.split('');
+    for (var i = 0; i < n; i++) {
+        s += c[Math.floor(Math.random() * c.length)];
+    }
+    return s;
+};
+
+// get multipart/form-data post data
+var get_post_data = function(boundary, data) {
+    var lb = "\r\n"; // line_break
+    var separator = '--' + boundary;
+    var content = [];
+    for (key in data) {
+        content.push([
+            'Content-Disposition: form-data; name="' + key + '"',
+            '',
+            data[key],
+        ].join(lb));
+    }
+    return [
+        separator,
+        content.join(lb + separator + lb),
+        separator + '--',
+    ].join(lb);
 };
 
 execute_validate();
