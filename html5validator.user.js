@@ -15,10 +15,6 @@ var execute_validate = function() {
         url:    location.href,
         onload: function(res) {
             var boundary = get_boundary();
-            console.log(get_post_data(boundary, {
-                    out: 'json',
-                    content: res.responseText,
-                }));
             GM_xmlhttpRequest({
                 method: 'POST',
                 url: validator_url,
