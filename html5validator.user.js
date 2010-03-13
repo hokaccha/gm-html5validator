@@ -60,14 +60,14 @@ var HTML5Vlidator = {
         }
     },
     _get_boundary: function() {
-        var n = 50;
-        var c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        var n = 30;
+        var c = '0123456789';
         var s = '';
         c = c.split('');
         for (var i = 0; i < n; i++) {
             s += c[Math.floor(Math.random() * c.length)];
         }
-        return s;
+        return '---------------------------'+s;
     },
     _get_post_data: function(boundary, data) {
         var lb = "\r\n"; // line_break
