@@ -134,7 +134,8 @@ var HTML5Vlidator = {
 
         document.body.appendChild(error_box);
 
-        self.icon_img.addEventListener('mouseover', function() {
+        self.icon_img.style.cursor = 'pointer';
+        self.icon_img.addEventListener('click', function() {
             error_box.style.display = 'block';
         }, false);
         document.getElementById(close_btn_id).addEventListener('click', function() {
