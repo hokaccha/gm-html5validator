@@ -95,15 +95,18 @@ var HTML5Vlidator = {
         var error_box = document.createElement('div');
         error_box.setAttribute('style', [
             'display:    none',
-            'position:   absolute',
+            'position:   fixed',
             'bottom:     10px',
             'left:       10px',
             'margin:     0',
-            'padding:    0',
+            'padding:    10px',
+            'width:      500px',
             'font-size:  13px',
             'background: #FFCCCC',
             'border:     1px solid #CC0000',
             'z-index:    10000000',
+            'max-height: 90%',
+            'overflow:   auto',
         ].join(';'));
         
         var close_btn = document.createElement('div');
@@ -111,19 +114,18 @@ var HTML5Vlidator = {
         close_btn.setAttribute('style', [
             'display: inline-block',
             'margin : 0',
-            'padding: 10px 0 0 10px',
+            'padding: 0 0 5px 0',
             'color  : #666666',
             'cursor : pointer',
         ].join(';'));
         close_btn.innerHTML = '[x]close';
-        close_btn.setAttribute('id', close_btn_id);
         error_box.appendChild(close_btn);
 
         for (var i = 0, len = messages.length; i < len; i++) {
             var msg = messages[i];
             var num = i + 1;
             error_box.innerHTML += [
-                '<div style="margin: 10px">',
+                '<div style="margin: 10px 0; text-indent: -1em; padding: 0 0 0 1em">',
                 num + '. ',
                 '<span style="font-weight:bold; text-transform: capitalize">' + msg.type + '</span>',
                 ': ' + msg.message,
@@ -138,7 +140,10 @@ var HTML5Vlidator = {
         self.icon_img.addEventListener('click', function() {
             error_box.style.display = 'block';
         }, false);
-        document.getElementById(close_btn_id).addEventListener('click', function() {
+        error_box.firstChild.addEventListener('click', function() {
+            error_box.style.display = 'none';
+        }, false);
+        document.body.addEventListener('click', function() {
             error_box.style.display = 'none';
         }, false);
     },
